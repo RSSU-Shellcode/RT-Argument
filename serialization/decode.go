@@ -8,6 +8,8 @@ import (
 	"io"
 	"math"
 	"reflect"
+
+	"github.com/RTS-Framework/GRT-Develop/types"
 )
 
 // Unmarshal is used to unserialize binary data to structure.
@@ -146,7 +148,7 @@ func decodePointer(reader *bytes.Reader, field reflect.Value, size uint32) error
 		if err != nil {
 			return err
 		}
-		s, err := utf16ToString(buf)
+		s, err := types.UTF16ToString(buf)
 		if err != nil {
 			return err
 		}

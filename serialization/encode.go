@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"math"
 	"reflect"
+
+	"github.com/RTS-Framework/GRT-Develop/types"
 )
 
 // Marshal is used to serialize structure to binary data.
@@ -112,7 +114,7 @@ func encodeField(field reflect.Value) (uint32, []byte, error) {
 			data[0] = 1
 		}
 	case reflect.String:
-		data = stringToUTF16(field.String())
+		data = types.StringToUTF16(field.String())
 		desc = typePointer | uint32(len(data)) // #nosec G115
 	case reflect.Array:
 		data, err = encodeArray(field)
