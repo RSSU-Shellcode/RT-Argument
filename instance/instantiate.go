@@ -3,6 +3,7 @@ package instance
 import (
 	"bytes"
 	"crypto/rand"
+	"flag"
 
 	"github.com/RTS-Framework/GRT-Develop/argument"
 	"github.com/RTS-Framework/GRT-Develop/hashmod"
@@ -135,4 +136,52 @@ func hashMod(module string) uint64 {
 		return 0x0001
 	}
 	return hashmod.Hash(module)
+}
+
+// Flag is used to read options from command line.
+func Flag(opts *Options) {
+	flag.StringVar(
+		&opts.ImagePinningName, "grt-ipn", "",
+		"Gleam-RT: set the image name about image pinning",
+	)
+	flag.StringVar(
+		&opts.ShieldModuleName, "grt-smn", "",
+		"Gleam-RT: set the module name about pre-injected shield",
+	)
+	flag.Uint64Var(
+		&opts.ShieldEntryPoint, "grt-sep", 0,
+		"Gleam-RT: set the rva about the shield in module",
+	)
+	flag.Uint64Var(
+		&opts.ShieldMemAddress, "grt-sma", 0,
+		"Gleam-RT: set the shield absolute memory address",
+	)
+	flag.BoolVar(
+		&opts.EnableSecurityMode, "grt-esm", false,
+		"Gleam-RT: detect environment when initialize runtime",
+	)
+	flag.BoolVar(
+		&opts.DisableDetector, "grt-dd", false,
+		"Gleam-RT: disable detector for test or debug",
+	)
+	flag.BoolVar(
+		&opts.DisableWatchdog, "grt-dw", false,
+		"Gleam-RT: disable watchdog for implement single thread model.",
+	)
+	flag.BoolVar(
+		&opts.DisableSysmon, "grt-ds", false,
+		"Gleam-RT: disable sysmon for implement single thread model",
+	)
+	flag.BoolVar(
+		&opts.NotEraseInstruction, "grt-nei", false,
+		"Gleam-RT: not erase runtime instructions after runtime stop",
+	)
+	flag.BoolVar(
+		&opts.NotAdjustProtect, "grt-nap", false,
+		"Gleam-RT: not adjust current memory page protect for erase runtime",
+	)
+	flag.BoolVar(
+		&opts.TrackCurrentThread, "grt-tct", false,
+		"Gleam-RT: track current thread for test or debug mode",
+	)
 }

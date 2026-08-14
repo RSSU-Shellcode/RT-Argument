@@ -140,3 +140,23 @@ func TestInstantiate(t *testing.T) {
 		require.Nil(t, instance)
 	})
 }
+
+func TestFlag(t *testing.T) {
+	opts := Options{
+		ImagePinningName:    "test.exe",
+		ShieldModuleName:    "test.dll",
+		ShieldEntryPoint:    0x9012,
+		ShieldMemAddress:    0x7FFA,
+		EnableSecurityMode:  true,
+		DisableDetector:     true,
+		DisableWatchdog:     true,
+		DisableSysmon:       true,
+		NotEraseInstruction: true,
+		NotAdjustProtect:    true,
+		TrackCurrentThread:  true,
+	}
+	Flag(&opts)
+
+	expected := Options{}
+	require.Equal(t, expected, opts)
+}
