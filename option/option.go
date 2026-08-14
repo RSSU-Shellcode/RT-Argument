@@ -183,6 +183,7 @@ func Get(instance []byte, offset int) (*Options, error) {
 	return &opts, nil
 }
 
+// for prevent operation like plain text attack.
 func boolToByte(b bool) byte {
 	if b {
 		return 0
@@ -202,19 +203,19 @@ func xor(data, key []byte) {
 func Flag(opts *Options) {
 	flag.Uint64Var(
 		&opts.ImagePinningHash, "grt-iph", 0,
-		"set the hash about image pinning",
+		"Gleam-RT: set the hash about image pinning",
 	)
 	flag.Uint64Var(
 		&opts.ShieldModuleHash, "grt-smh", 0,
-		"set the module hash about pre-injected shield",
+		"Gleam-RT: set the module hash about pre-injected shield",
 	)
 	flag.Uint64Var(
 		&opts.ShieldEntryPoint, "grt-sep", 0,
-		"set the rva about the shield in module",
+		"Gleam-RT: set the rva about the shield in module",
 	)
 	flag.Uint64Var(
 		&opts.ShieldMemAddress, "grt-sma", 0,
-		"set the shield absolute memory address",
+		"Gleam-RT: set the shield absolute memory address",
 	)
 	flag.BoolVar(
 		&opts.EnableSecurityMode, "grt-esm", false,
