@@ -243,7 +243,7 @@ func obfuscateStub(stub []byte, seed uint64) {
 
 func illuminateStub(stub []byte, seed uint64) {
 	sbox := initSBox(seed)
-	sbox = reverseSBox(sbox)
+	sbox = inverseSBox(sbox)
 	unshuffle(stub, seed)
 	for i := 0; i < len(stub); i++ {
 		stub[i] = sbox[stub[i]]
@@ -265,7 +265,7 @@ func initSBox(seed uint64) [256]byte {
 	return sbox
 }
 
-func reverseSBox(sbox [256]byte) [256]byte {
+func inverseSBox(sbox [256]byte) [256]byte {
 	var r [256]byte
 	for i := 0; i < 256; i++ {
 		r[sbox[i]] = byte(i)
