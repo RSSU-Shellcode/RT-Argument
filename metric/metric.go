@@ -10,16 +10,22 @@ type Metrics struct {
 	Memory   MTStatus
 	Thread   TTStatus
 	Resource RTStatus
+	Argument ASStatus
+	Storage  ISStatus
 	Detector DTStatus
 	Watchdog WDStatus
 	Sysmon   SMStatus
 	Shield   SDStatus
+	Core     COStatus
+	Sleep    RTSleep
+	Method   RTMethod
 }
 
 // LTStatus contains status about library tracker.
 type LTStatus struct {
-	NumModules    int64
-	NumProcedures int64
+	NumModules   int64
+	NumLoadCalls int64
+	NumFreeCalls int64
 }
 
 // MTStatus contains status about memory tracker.
@@ -30,12 +36,18 @@ type MTStatus struct {
 	NumRegions int64
 	NumPages   int64
 	NumHeaps   int64
+	NumRWXs    int64
+	TotalAlloc int64
+	PeakAlloc  int64
 }
 
 // TTStatus contains status about thread tracker.
 type TTStatus struct {
 	NumThreads  int64
 	NumTLSIndex int64
+	NumCreated  int64
+	NumExited   int64
+	NumLocked   int64
 	NumSuspend  int64
 }
 
@@ -52,6 +64,19 @@ type RTStatus struct {
 	NumSockets        int64
 }
 
+// ASStatus contains status about argument store.
+type ASStatus struct {
+	NumItems  int32
+	NumErased int32
+	TotalSize int64
+}
+
+// ISStatus contains status about in-memory storage.
+type ISStatus struct {
+	NumItems  int64
+	TotalSize int64
+}
+
 // DTStatus contains status about detector.
 type DTStatus struct {
 	IsEnabled        types.BOOL
@@ -62,6 +87,7 @@ type DTStatus struct {
 	InVirtualMachine types.BOOL
 	IsAccelerated    types.BOOL
 	SafeRank         int32
+	NumDetectCalls   int64
 }
 
 // WDStatus contains status about watchdog.
@@ -87,4 +113,35 @@ type SDStatus struct {
 	EntryPoint  uintptr
 	BaseAddress uintptr
 	Source      int64
+}
+
+// COStatus contains status about runtime core.
+type COStatus struct {
+	Uptime       int64
+	InitElapsed  int64
+	SecurityMode types.BOOL
+	IsHealthy    types.BOOL
+}
+
+// RTMethod contains metric about runtime method.
+type RTMethod struct {
+	NumAPIRedirect int32
+	NumAPIFallback int32
+	NumGetProcAddr int32
+	NumGetProcRaw  int32
+}
+
+// RTSleep contains metric about runtime sleep.
+type RTSleep struct {
+	NumCalls         int32
+	LastElapsed      int32
+	LastPreElapsed   int32
+	LastPostElapsed  int32
+	TotalElapsed     int64
+	TotalPreElapsed  int64
+	TotalPostElapsed int64
+	MinPreElapsed    int32
+	MaxPreElapsed    int32
+	MinPostElapsed   int32
+	MaxPostElapsed   int32
 }
