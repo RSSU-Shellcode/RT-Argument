@@ -17,8 +17,8 @@ type Metrics struct {
 	Sysmon   SMStatus
 	Shield   SDStatus
 	Core     COStatus
+	GetProc  RTGetProc
 	Sleep    RTSleep
-	Method   RTMethod
 }
 
 // LTStatus contains status about library tracker.
@@ -43,12 +43,12 @@ type MTStatus struct {
 
 // TTStatus contains status about thread tracker.
 type TTStatus struct {
-	NumThreads  int64
-	NumTLSIndex int64
-	NumCreated  int64
-	NumExited   int64
-	NumLocked   int64
-	NumSuspend  int64
+	NumThreads   int64
+	NumTLSIndex  int64
+	NumCreated   int64
+	NumExited    int64
+	NumLocked    int64
+	NumSuspended int64
 }
 
 // RTStatus contains status about resource tracker.
@@ -123,21 +123,20 @@ type COStatus struct {
 	IsHealthy    types.BOOL
 }
 
-// RTMethod contains metric about runtime method.
-type RTMethod struct {
-	NumAPIRedirect int32
-	NumAPIFallback int32
-	NumGetProcAddr int32
-	NumGetProcRaw  int32
+// RTGetProc contains metric about runtime GetProcAddress.
+type RTGetProc struct {
+	NumCalls    int64
+	NumRedirect int64
+	NumFallback int64
+	NumRTMethod int64
+	NumRawProc  int64
 }
 
 // RTSleep contains metric about runtime sleep.
 type RTSleep struct {
-	NumCalls         int32
-	LastElapsed      int32
+	NumCalls         int64
 	LastPreElapsed   int32
 	LastPostElapsed  int32
-	TotalElapsed     int64
 	TotalPreElapsed  int64
 	TotalPostElapsed int64
 	MinPreElapsed    int32
