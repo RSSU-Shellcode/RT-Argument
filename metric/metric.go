@@ -16,8 +16,8 @@ type Metrics struct {
 	Watchdog WDStatus
 	Sysmon   SMStatus
 	Shield   SDStatus
-	Core     COStatus
-	GetProc  RTGetProc
+	Core     RTCore
+	Proc     RTProc
 	Sleep    RTSleep
 }
 
@@ -115,16 +115,16 @@ type SDStatus struct {
 	Source      int64
 }
 
-// COStatus contains status about runtime core.
-type COStatus struct {
+// RTCore contains metric about runtime core.
+type RTCore struct {
 	Uptime       int64
 	InitElapsed  int64
 	SecurityMode types.BOOL
 	IsHealthy    types.BOOL
 }
 
-// RTGetProc contains metric about runtime GetProcAddress.
-type RTGetProc struct {
+// RTProc contains metric about runtime GetProcAddress.
+type RTProc struct {
 	NumCalls    int64
 	NumRedirect int64
 	NumFallback int64
