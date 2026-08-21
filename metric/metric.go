@@ -141,6 +141,8 @@ type RTSleep struct {
 	TotalPostElapsed int64
 	MinPreElapsed    int32
 	MaxPreElapsed    int32
+	AvgPreElapsed    int32
 	MinPostElapsed   int32
 	MaxPostElapsed   int32
+	AvgPostElapsed   int32
 }
