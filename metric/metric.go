@@ -135,6 +135,8 @@ type RTProc struct {
 // RTSleep contains metric about runtime sleep.
 type RTSleep struct {
 	NumCalls         int64
+	LastError        int32
+	Reserved         int32
 	LastPreElapsed   int32
 	LastPostElapsed  int32
 	TotalPreElapsed  int64
