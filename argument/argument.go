@@ -180,7 +180,7 @@ func encryptStub(stub []byte) {
 	key := stub[offsetCryptoKey : offsetCryptoKey+cryptoKeySize]
 	if len(data) > AlgoSwitchSize {
 		seed := binary.LittleEndian.Uint64(key[:8])
-		obfuscateStub(data, seed)
+		shuffle(data, seed)
 		return
 	}
 	last := binary.LittleEndian.Uint32(key[:4])
@@ -209,7 +209,7 @@ func decryptStub(stub []byte) {
 	key := stub[offsetCryptoKey : offsetCryptoKey+cryptoKeySize]
 	if len(data) > AlgoSwitchSize {
 		seed := binary.LittleEndian.Uint64(key[:8])
-		illuminateStub(data, seed)
+		unshuffle(data, seed)
 		return
 	}
 	last := binary.LittleEndian.Uint32(key[:4])
@@ -231,46 +231,6 @@ func decryptStub(stub []byte) {
 		ctr++
 		last = xorShift32(last)
 	}
-}
-
-func obfuscateStub(stub []byte, seed uint64) {
-	sbox := initSBox(seed)
-	for i := 0; i < len(stub); i++ {
-		stub[i] = sbox[stub[i]]
-	}
-	shuffle(stub, seed)
-}
-
-func illuminateStub(stub []byte, seed uint64) {
-	sbox := initSBox(seed)
-	sbox = inverseSBox(sbox)
-	unshuffle(stub, seed)
-	for i := 0; i < len(stub); i++ {
-		stub[i] = sbox[stub[i]]
-	}
-}
-
-func initSBox(seed uint64) [256]byte {
-	var sbox [256]byte
-	for i := 0; i < 256; i++ {
-		sbox[i] = byte(i)
-	}
-	for i := len(sbox) - 1; i > 0; i-- {
-		j := seed % uint64(i+1)
-		t := sbox[i]
-		sbox[i] = sbox[j]
-		sbox[j] = t
-		seed = xorShift64(seed)
-	}
-	return sbox
-}
-
-func inverseSBox(sbox [256]byte) [256]byte {
-	var r [256]byte
-	for i := 0; i < 256; i++ {
-		r[sbox[i]] = byte(i)
-	}
-	return r
 }
 
 func shuffle(data []byte, seed uint64) {
