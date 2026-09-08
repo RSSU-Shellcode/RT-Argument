@@ -89,17 +89,25 @@ func AESDecrypt(data, key []byte) ([]byte, error) {
 	// 2. use crypto/subtle for constant-time byte comparison
 	// 3. accumulate the result in a single int flag (no branching on secret)
 	// 4. return the same error for all failure cases
+	//
+	// note: the behavior of crypto/subtle is undefined when its arguments is
+	// negative or greater than 2^31-1, so the padding size must be checked in
+	// the range [1, AESBlockSize] without calculating "paddingSize-1", it is
+	// how the invalid padding size 0 is rejected.
 	outputSize := len(output)
 	paddingSize := int(output[outputSize-1])
 	// check that paddingSize is in valid range [1, AESBlockSize] using
-	// constant-time comparison: valid if (paddingSize-1) < AESBlockSize
-	valid := subtle.ConstantTimeLessOrEq(paddingSize-1, AESBlockSize-1)
+	// constant-time comparison: valid if 1 <= paddingSize <= AESBlockSize
+	valid := subtle.ConstantTimeLessOrEq(1, paddingSize)
+	valid &= subtle.ConstantTimeLessOrEq(paddingSize, AESBlockSize)
 	// check all bytes in the last block: each byte at position
 	// (outputSize-1-i) for i in [0, paddingSize) must equal paddingSize.
 	// we always loop AESBlockSize times and mask the result.
 	for i := 0; i < AESBlockSize; i++ {
-		// constant-time: 1 if i < paddingSize, 0 otherwise
-		inRange := subtle.ConstantTimeLessOrEq(i, paddingSize-1)
+		// constant-time: 1 if i < paddingSize, 0 otherwise,
+		// "i+1 <= paddingSize" is equivalent to "i <= paddingSize-1"
+		// without the negative value when paddingSize is zero.
+		inRange := subtle.ConstantTimeLessOrEq(i+1, paddingSize)
 		// constant-time: 1 if byte matches paddingSize, 0 otherwise
 		match := subtle.ConstantTimeByteEq(output[outputSize-1-i], byte(paddingSize)) // #nosec G115
 		// if inRange: require match; if not inRange: accept (mask = 1)
