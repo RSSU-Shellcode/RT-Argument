@@ -54,7 +54,7 @@ func checkError(err error) {
 ```
 
 ## Disclaimer
-This project is developed solely for security research, educational purposes, and authorized penetration testing.\
+This project is developed solely for security research, educational purposes, and authorized penetration testing.
 Any use for illegal activities, unauthorized access to computer systems, or malicious purposes is strictly prohibited.
 
 By using this project, you agree that:
