@@ -31,6 +31,12 @@ func TestUTF16ToString(t *testing.T) {
 		require.Equal(t, expected, s)
 	})
 
+	t.Run("empty", func(t *testing.T) {
+		s, err := UTF16ToString(nil)
+		require.NoError(t, err)
+		require.Zero(t, s)
+	})
+
 	t.Run("invalid", func(t *testing.T) {
 		utf16 := []byte{0x61}
 

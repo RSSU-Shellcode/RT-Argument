@@ -22,6 +22,9 @@ func StringToUTF16(s string) []byte {
 // UTF16ToString is used to convert utf16 string to go string.
 func UTF16ToString(b []byte) (string, error) {
 	n := len(b)
+	if n == 0 {
+		return "", nil
+	}
 	n -= 2 // remove the "0x00, 0x00" at tail
 	if n%2 != 0 {
 		return "", errors.New("invalid utf16 string")
