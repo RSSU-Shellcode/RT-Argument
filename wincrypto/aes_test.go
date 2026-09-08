@@ -1,6 +1,9 @@
 package wincrypto
 
 import (
+	"bytes"
+	"crypto/aes"
+	"crypto/cipher"
 	"crypto/rand"
 	"errors"
 	"testing"
@@ -71,6 +74,25 @@ func TestAESDecrypt(t *testing.T) {
 		output, err := AESDecrypt(nil, key)
 		require.Equal(t, ErrEmptyCipherData, err)
 		require.Nil(t, output)
+	})
+
+	t.Run("zero padding size", func(t *testing.T) {
+		block, err := aes.NewCipher(key)
+		require.NoError(t, err)
+
+		// craft a block which the last byte is 0x00,
+		// it is an invalid PKCS#5 padding size.
+		iv := make([]byte, AESIVSize)
+		plain := bytes.Repeat([]byte{0x41}, AESBlockSize)
+		plain[AESBlockSize-1] = 0x00
+
+		cipherData := make([]byte, AESIVSize+AESBlockSize)
+		copy(cipherData, iv)
+		cipher.NewCBCEncrypter(block, iv).CryptBlocks(cipherData[AESIVSize:], plain)
+
+		plainData, err := AESDecrypt(cipherData, key)
+		require.Equal(t, ErrInvalidCipherData, err)
+		require.Nil(t, plainData)
 	})
 
 	t.Run("invalid key size", func(t *testing.T) {
